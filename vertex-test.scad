@@ -19,11 +19,11 @@ module vertex(){
         difference(){
             body();  
             //Recesses
-            translate([20,0,10]) rotate([-90,0,-30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
-            translate([20,0,30]) rotate([-90,0,-30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
+            translate([18.5,0,10]) rotate([-90,0,-30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
+            translate([18.5,0,30]) rotate([-90,0,-30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
             
-            translate([-20,0,10]) rotate([-90,0,30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
-            translate([-20,0,30]) rotate([-90,0,30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
+            translate([-18.5,0,10]) rotate([-90,0,30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
+            translate([-18.5,0,30]) rotate([-90,0,30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
         }
         translate([0,vertical_extrusion_y / 2 + slot_thickness,(horizontal_extrusion_x + extra_vertical_height) / 2]) vslot_extrusion(vertical_extrusion_x, vertical_extrusion_y, horizontal_extrusion_x + extra_vertical_height);
         

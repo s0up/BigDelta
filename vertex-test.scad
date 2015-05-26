@@ -1,7 +1,7 @@
 //general variables
 arm_thickness = 10;
 slot_thickness = 10;
-arm_length = 80;
+arm_length = 60;
 hole_size = 5.2;
 arm_num_holes = 4;
 //4040 vertical extrusions
@@ -26,6 +26,12 @@ module vertex(){
             translate([-20,0,30]) rotate([-90,0,30]) translate([0,0,-5]) cylinder(d=8, $fn=15, h=60);
         }
         translate([0,vertical_extrusion_y / 2 + slot_thickness,(horizontal_extrusion_x + extra_vertical_height) / 2]) vslot_extrusion(vertical_extrusion_x, vertical_extrusion_y, horizontal_extrusion_x + extra_vertical_height);
+        
+        //T-slot holes/
+        translate([-horizontal_extrusion_x / 4,0,horizontal_extrusion_x / 4]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=vertical_extrusion_y + (slot_thickness * 2));
+        translate([-horizontal_extrusion_x / 4,0,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=vertical_extrusion_y + (slot_thickness * 2));
+        translate([horizontal_extrusion_x / 4,0,horizontal_extrusion_x / 4]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=vertical_extrusion_y + (slot_thickness * 2));
+        translate([horizontal_extrusion_x / 4,0,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=vertical_extrusion_y + (slot_thickness * 2));
     }    
 }
 
@@ -33,22 +39,10 @@ module body(){
     union(){
         mirror_copy() 
             translate([(vertical_extrusion_x + slot_thickness * 2) / 2 - sin(60) * (vertical_extrusion_x / 2 + slot_thickness),cos(60) * (vertical_extrusion_x / 2 + slot_thickness),0]) rotate([0, 0, -30]) arm();
-        
+
         difference(){
             translate([0,(vertical_extrusion_y + slot_thickness * 2) / 2,(horizontal_extrusion_x + extra_vertical_height)/ 2])       
-            cube([vertical_extrusion_x + slot_thickness * 2, vertical_extrusion_y + slot_thickness * 2, horizontal_extrusion_x + extra_vertical_height], center=true); 
-            
-            //T-slot holes
-            translate([-horizontal_extrusion_x / 4,0,horizontal_extrusion_x / 4]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=slot_thickness);
-            translate([horizontal_extrusion_x / 4,0,horizontal_extrusion_x / 4]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=slot_thickness);
-            translate([-horizontal_extrusion_x / 4,0,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=slot_thickness);
-            translate([horizontal_extrusion_x / 4,0,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=slot_thickness);
-            
-            translate([-horizontal_extrusion_x / 4,vertical_extrusion_y + slot_thickness,horizontal_extrusion_x / 4]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=slot_thickness);
-            translate([horizontal_extrusion_x / 4,vertical_extrusion_y + slot_thickness,horizontal_extrusion_x / 4]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=slot_thickness);
-            translate([-horizontal_extrusion_x / 4,vertical_extrusion_y + slot_thickness,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=slot_thickness);
-            translate([horizontal_extrusion_x / 4,vertical_extrusion_y + slot_thickness,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=slot_thickness);
-            
+            cube([vertical_extrusion_x + slot_thickness * 2, vertical_extrusion_y + slot_thickness * 2, horizontal_extrusion_x + extra_vertical_height], center=true);       
         }
            
     }    
@@ -87,10 +81,14 @@ module mirror_copy(vec=[1,0,0])
 module vslot_extrusion(x,y,length = 20) {
     difference(){
         cube([x,y,length],center=true);
-        translate([x / 2 + 0.01,0,0]) vslot();
-        translate([-x / 2 - 0.01,0,0]) rotate([0,0,180]) vslot();
-        translate([0,y / 2 + 0.01,0]) rotate([0,0,90]) vslot();
-        translate([0,-y / 2 - 0.01,0]) rotate([0,0,-90]) vslot();
+        translate([x / 2 + 0.01,y / 4,0]) vslot();
+        translate([x / 2 + 0.01,-y  / 4,0]) vslot();
+        translate([-x / 2 - 0.01,-y / 4,0]) rotate([0,0,180]) vslot();
+        translate([-x / 2 - 0.01,y / 4,0]) rotate([0,0,180]) vslot();
+        translate([x / 4,y / 2 + 0.01,0]) rotate([0,0,90]) vslot();
+        translate([-x / 4,y / 2 + 0.01,0]) rotate([0,0,90]) vslot();
+        translate([x / 4,-y / 2 - 0.01,0]) rotate([0,0,-90]) vslot();
+        translate([-x / 4,-y / 2 - 0.01,0]) rotate([0,0,-90]) vslot();
     }
     
     module vslot(){

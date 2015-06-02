@@ -1,0 +1,154 @@
+//general variables
+arm_thickness = 10;
+slot_thickness = 10;
+arm_length = 60;
+hole_size = 5.2;
+arm_num_holes = 4;
+//4040 vertical extrusions
+vertical_extrusion_x = 40.1;
+vertical_extrusion_y = 40.1;
+extra_vertical_height = 20;
+//2040 horizontal extrusions
+horizontal_extrusion_x = 40;
+horizontal_extrusion_y = 20;
+
+vertex();
+
+
+module vertex(){
+    difference(){
+        difference(){
+            body(); 
+           //TEST RECESSES 
+
+           //translate([vertical_extrusion_x / 2 + (slot_thickness / 2),vertical_extrusion_y / 2,0]) rotate([0,0,-30]) translate([0,0,-5]) cube([12, 20, horizontal_extrusion_x - slot_thickness + hole_size + 5]);
+
+            //Recesses
+            
+            translate([18.5,0,10]) rotate([-90,0,-30]) translate([0,0,-5]) cylinder(d=6, $fn=15, h=58);
+            translate([18.5,0,30]) rotate([-90,0,-30]) translate([0,0,-5]) cylinder(d=6, $fn=15, h=58);
+            
+            translate([-18.5,0,10]) rotate([-90,0,30]) translate([0,0,-5]) cylinder(d=6, $fn=15, h=58);
+            translate([-18.5,0,30]) rotate([-90,0,30]) translate([0,0,-5]) cylinder(d=6, $fn=15, h=58);
+        }
+        translate([0,vertical_extrusion_y / 2 + slot_thickness,(horizontal_extrusion_x + extra_vertical_height) / 2]) vslot_extrusion(vertical_extrusion_x, vertical_extrusion_y, horizontal_extrusion_x + extra_vertical_height);
+        
+        //T-slot holes/
+        translate([-horizontal_extrusion_x / 4,0,horizontal_extrusion_x / 4]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=vertical_extrusion_y + (slot_thickness * 2));
+        translate([-horizontal_extrusion_x / 4,0,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=vertical_extrusion_y + (slot_thickness * 2));
+        translate([horizontal_extrusion_x / 4,0,horizontal_extrusion_x / 4]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=vertical_extrusion_y + (slot_thickness * 2));
+        translate([horizontal_extrusion_x / 4,0,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([-90,0,0]) cylinder(d=hole_size,$fn=25,h=vertical_extrusion_y + (slot_thickness * 2));
+    }    
+}
+
+module body(){
+    union(){
+        mirror_copy() 
+            translate([(vertical_extrusion_x + slot_thickness * 2) / 2 - sin(60) * (vertical_extrusion_x / 2 + slot_thickness),cos(60) * (vertical_extrusion_x / 2 + slot_thickness),0]) rotate([0, 0, -30]) arm();
+
+        difference(){
+            translate([0,(vertical_extrusion_y + slot_thickness * 2) / 2,(horizontal_extrusion_x + extra_vertical_height)/ 2])       
+            cube([vertical_extrusion_x + slot_thickness * 2, vertical_extrusion_y + slot_thickness * 2, horizontal_extrusion_x + extra_vertical_height], center=true);       
+        }
+           
+    }    
+}
+
+
+
+module arm(){
+    
+    linear_extrude(height=horizontal_extrusion_x){
+        minkowski(){
+            polygon(points=[
+                [vertical_extrusion_x / 2 + slot_thickness, vertical_extrusion_y + (slot_thickness * 2) - (slot_thickness / 8)],
+                [vertical_extrusion_x / 2 + slot_thickness + slot_thickness / 2, vertical_extrusion_y + (slot_thickness * 2) - slot_thickness * 2],
+                [vertical_extrusion_x / 2 + slot_thickness,(slot_thickness / 8)]
+            ],paths=[
+                [0,1,2]
+            ]);  
+            circle(d=slot_thickness / 4, $fn=20);
+        }
+
+    }
+    difference(){
+        linear_extrude(height=horizontal_extrusion_x){
+            union(){
+                square([vertical_extrusion_x / 2 + slot_thickness, vertical_extrusion_y + (slot_thickness * 2)]);
+                translate([0,vertical_extrusion_y + slot_thickness * 2,0]) square([arm_thickness, arm_length]);           
+            }
+        }   
+        //4x holes on arm
+        translate([0,vertical_extrusion_y + slot_thickness * 2 + arm_length / 4,horizontal_extrusion_x / 4]) rotate([0,90,0]) cylinder($fn=25, h=arm_thickness, d=hole_size);
+        translate([0,vertical_extrusion_y + slot_thickness * 2 + arm_length - (arm_length / 4),horizontal_extrusion_x / 4]) rotate([0,90,0]) cylinder($fn=25, h=arm_thickness, d=hole_size);
+        translate([0,vertical_extrusion_y + slot_thickness * 2 + arm_length / 4,horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([0,90,0]) cylinder($fn=25, h=arm_thickness, d=hole_size);
+        translate([0,vertical_extrusion_y + slot_thickness * 2 + arm_length - (arm_length / 4),horizontal_extrusion_x - (horizontal_extrusion_x / 4)]) rotate([0,90,0]) cylinder($fn=25, h=arm_thickness, d=hole_size);
+        
+        //2x holes for tap 
+        translate([(horizontal_extrusion_y / 2) + arm_thickness,vertical_extrusion_y + (slot_thickness * 2) + 20,horizontal_extrusion_x / 4]) rotate([90,0,0]) cylinder($fn=25, h=vertical_extrusion_y + (slot_thickness * 2), d=hole_size);
+        translate([(horizontal_extrusion_y / 2) + arm_thickness,vertical_extrusion_y + (slot_thickness * 2) + slot_thickness + 20,horizontal_extrusion_x - (horizontal_extrusion_x/ 4)]) rotate([90,0,0]) cylinder($fn=25, h=vertical_extrusion_y + (slot_thickness * 2), d=hole_size);
+        
+        //Recesses
+        translate([14,vertical_extrusion_y - 12 - slot_thickness,0]) cube([12, (vertical_extrusion_y + (slot_thickness * 2)) / 2 ,horizontal_extrusion_x - 4]);
+    }
+   
+}
+
+module mirror_copy(vec=[1,0,0]) 
+{ 
+    children(); 
+    mirror(vec) children(); 
+} 
+
+
+module vslot_extrusion(x,y,length = 20) {
+    difference(){
+        cube([x,y,length],center=true);
+        translate([x / 2 + 0.01,y / 4,0]) vslot();
+        translate([x / 2 + 0.01,-y  / 4,0]) vslot();
+        translate([-x / 2 - 0.01,-y / 4,0]) rotate([0,0,180]) vslot();
+        translate([-x / 2 - 0.01,y / 4,0]) rotate([0,0,180]) vslot();
+        translate([x / 4,y / 2 + 0.01,0]) rotate([0,0,90]) vslot();
+        translate([-x / 4,y / 2 + 0.01,0]) rotate([0,0,90]) vslot();
+        translate([x / 4,-y / 2 - 0.01,0]) rotate([0,0,-90]) vslot();
+        translate([-x / 4,-y / 2 - 0.01,0]) rotate([0,0,-90]) vslot();
+    }
+    
+    module vslot(){
+        difference() {
+            translate([0, 0, 0]) rotate([0, 0, 0])
+             cylinder(r=4.5, h=length, center=true,  $fn=4);	
+
+    //plane sides
+            translate([-3.8, 0, 0]) rotate([0, 0, 0])
+             cube([4, 20, length*2], center=true);
+            translate([3, 0, 0]) rotate([0, 0, 0])
+             cube([6, 20, length*2], center=true);
+        }        
+    }
+}    
+
+/*
+module misumibeam(size1=15, size2=15, length=100, extra=0) {
+   difference() {
+      cube([size1+extra, size2+extra, length], center=true);
+      for (a = [0:180:180]) rotate([0, 0, a]) {
+         translate([size1/2, 0, 0]) {
+          //  % cube([size1/2, 3, length+1], center=true);
+			minkowski() {
+               cube([size1/2-(extra+1), size1/6-extra, length+1], center=true);
+               cylinder(r=0.5, h=1, center=true);
+			} 
+        }
+      }
+      for (a = [0:90:270]) rotate([0, 0, a]) {
+         translate([size2/2, 0, 0]) {
+          //  % cube([size1/2, 3, length+1], center=true);
+			minkowski() {
+               cube([size1/2-(extra+1), size1/6-extra, length+1], center=true);
+               cylinder(r=0.5, h=1, center=true);
+			} 
+        }
+      }
+   }
+}*/

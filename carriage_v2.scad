@@ -20,9 +20,11 @@ alum_bar_height = 50.7;
 alum_bar_width = 70.7;
 alum_bar_thickness = 3;
 
-back_plate_thickness = 4.5;
+back_plate_thickness = 4;
 
 x_carriage();
+
+//back_plate();
 
 module x_carriage(){
     union(){
@@ -33,34 +35,29 @@ module x_carriage(){
 
 module back_plate(){
     back_plate_x = 100;
-    back_plate_y = 60;
+    back_plate_y = 80;
     back_plate_rounded = 5;
     
-    difference(){
-        linear_extrude(height=back_plate_thickness){
-            difference(){
-                minkowski(){
-                    color("green") square([back_plate_x,back_plate_y], center=true);
-                    circle(d=back_plate_rounded, $fn=25);
-                }
-                
-                
-                //Top left
-                translate([-back_plate_x / 2 + 10, back_plate_y / 2 - 10, 0]) circle(d=5.2, $fn=25);
-                //Top right
-                translate([back_plate_x / 2 - 10, back_plate_y / 2 - 10, 0]) circle(d=5.2, $fn=25);
-                //Bottom right
-                translate([back_plate_x / 2 - 10, -back_plate_y / 2 + 10, 0]) circle(d=5.2, $fn=25);
-                //Bottom left
-                translate([-back_plate_x / 2 + 10, -back_plate_y / 2 + 10, 0]) circle(d=5.2, $fn=25);
-                
-           }
-        }
-        translate([30,30,0]) cube([12,12,back_plate_thickness], center=true);
-        translate([30,-30,0]) cube([12,12,back_plate_thickness], center=true);
-        translate([-30,0,0]) cube([12,12,back_plate_thickness], center=true);
+    linear_extrude(height=back_plate_thickness){
+        difference(){
+            minkowski(){
+                color("green") square([back_plate_x,back_plate_y], center=true);
+                circle(d=back_plate_rounded, $fn=25);
+            }
+            translate([30,0,0]) circle(d=5.2, $fn=25);
+            translate([-30,-30,0]) circle(d=5.2, $fn=25);
+            translate([-30, 30,0]) circle(d=5.2, $fn=25);
+            //Top left
+            //translate([-back_plate_x / 2 + 10, back_plate_y / 2 - 10, 0]) circle(d=5.2, $fn=25);
+            //Top right
+            //translate([back_plate_x / 2 - 10, back_plate_y / 2 - 10, 0]) circle(d=5.2, $fn=25);
+            //Bottom right
+            //translate([back_plate_x / 2 - 10, -back_plate_y / 2 + 10, 0]) circle(d=5.2, $fn=25);
+            //Bottom left
+            //translate([-back_plate_x / 2 + 10, -back_plate_y / 2 + 10, 0]) circle(d=5.2, $fn=25);
+            
+       }
     }
-
 }
 
 // screw block

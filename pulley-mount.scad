@@ -17,11 +17,8 @@ module motor_mount(){
         //Cutout to only wrap around half the extrusion
         translate([0, thickness / 2 + extrusion_y / 2, 0]) cube([extrusion_x + thickness, extrusion_y, height]);
         
-        //Holes for hex wrench to install stepper
-        translate([center_x + 15.5,thickness,center_z - 15.5]) rotate([90,0,0]) cylinder(d=4.5, $fn=25, h=thickness + 5);
-        translate([center_x + 15.5,thickness,center_z + 15.5]) rotate([90,0,0]) cylinder(d=4.5, $fn=25, h=thickness + 5);
-        translate([center_x - 15.5,thickness,center_z - 15.5]) rotate([90,0,0]) cylinder(d=4.5, $fn=25, h=thickness + 5);
-        translate([center_x - 15.5,thickness,center_z + 15.5]) rotate([90,0,0]) cylinder(d=4.5, $fn=25, h=thickness + 5);
+        //Axle hole
+        translate([(40 + thickness ) / 2, thickness / 2 + 2.5, 20]) rotate([90,0,0]) cylinder(d=5.2, $fn=25, h=extrusion_y + thickness * 2 + 5);     
     }
 }
 
@@ -33,13 +30,6 @@ module mount(){
                 translate([thickness / 2,thickness / 2,0]) square([40, 30 + thickness]);
             }        
         }
-        //Axle hole
-        translate([(40 + thickness ) / 2, thickness / 2 + 2.5, 20]) rotate([90,0,0]) cylinder(d=25, $fn=25, h=thickness / 2 + 5);
-        //Stepper holes
-        translate([center_x + 15.5,thickness / 2,center_z - 15.5]) rotate([90,0,0]) cylinder(d=3.2, $fn=25, h=thickness / 2 + 5);
-        translate([center_x + 15.5,thickness / 2,center_z + 15.5]) rotate([90,0,0]) cylinder(d=3.2, $fn=25, h=thickness / 2 + 5);
-        translate([center_x - 15.5,thickness / 2,center_z - 15.5]) rotate([90,0,0]) cylinder(d=3.2, $fn=25, h=thickness / 2 + 5);
-        translate([center_x - 15.5,thickness / 2,center_z + 15.5]) rotate([90,0,0]) cylinder(d=3.2, $fn=25, h=thickness / 2 + 5);
     }
 
 }
@@ -50,9 +40,6 @@ module base(){
            cube([extrusion_x + thickness, extrusion_y + thickness, height], center=true);
            
             vslot_extrusion(extrusion_x,extrusion_y,height);
-            
-           //translate([0, extrusion_y / 4, extrusion_y / 4]) rotate([0,90,0])  cylinder(d=5.1, h=thickness * 2 + 40, $fn=16, center=true);
-           //translate([0, extrusion_y / 4, -extrusion_y / 4]) rotate([0,90,0])  cylinder(d=5.1, h=thickness * 2 + 40, $fn=16, center=true);  
            translate([0, -extrusion_y / 4, extrusion_y / 4]) rotate([0,90,0])  cylinder(d=5.1, h=thickness * 2 + 40, $fn=16, center=true); 
            translate([0, -extrusion_y / 4, -extrusion_y / 4]) rotate([0,90,0])  cylinder(d=5.1, h=thickness * 2 + 40, $fn=16, center=true); 
 

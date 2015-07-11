@@ -14,6 +14,11 @@ horizontal_extrusion_y = 20;
 
 vertex();
 
+use <motor-mount-v2.scad>;
+
+translate([0,64,0]){
+   arms();
+} 
 
 module vertex(){
     difference(){
